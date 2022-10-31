@@ -1,0 +1,78 @@
+General:
+    comment: 
+    seed: 2022
+    local_rank: 0
+    server: test #train or test
+    max_epoch: 200
+    patience: 10
+    results_dir: results_20x/tcga-nsclc
+
+Data:
+    dataset_name: tcga-nsclc
+    data_shuffle: False
+    cluster_path: dataset_csv/tcga-nsclc/all_clusters_20x.json
+    data_dir: /data1/zrx/SwinMIL_results_20x/TCGA-NSCLC_features/pt_files/
+    label_dir: dataset_csv/tcga-nsclc/
+    slide_extension: .svs
+    fold: 0
+    nfold: 4
+
+    train_dataloader:
+        batch_size: 1
+        num_workers: 8
+
+    test_dataloader:
+        batch_size: 1
+        num_workers: 8
+
+Model:
+    name: MaxPooling
+    in_embed_dim: 512
+    num_classes: 2
+    num_layers: 1
+    sample_mode: nearest
+
+    hi_trans:
+        dim: 512
+        num_windows: [8,4,2,1]
+
+    trans_att:
+        width: 512
+        depth: 2
+        heads: 8
+
+    swin_transformer:
+        img_size: 224
+        patch_size: 4
+        in_chans: 512
+        embed_dim: 384 #!!
+        depths: [2,2,6,2]
+        num_heads: [3,6,12,24]
+        window_size: 7
+        mlp_ratio: 4.
+        qkv_bias: True
+        qk_scale: null
+        drop_rate: 0.
+        attn_drop_rate: 0.
+        drop_path_rate: 0.1
+        norm_layer: LayerNorm
+        ape: False
+        patch_norm: True
+        use_checkpoint: False
+
+Optimizer:
+    opt: adam
+    lr: 0.0002
+    opt_eps: null 
+    opt_betas: null
+    momentum: null
+    weight_decay: 0.0001
+
+Scheduler:
+    is_use: False
+    sch: MultiStepLR
+    milestones: [10,20]
+    lr_decay: 0.5
+
+Loss:
+    loss: CrossEntropyLoss
